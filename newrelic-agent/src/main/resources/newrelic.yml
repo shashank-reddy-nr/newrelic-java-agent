@@ -244,11 +244,13 @@ common: &default_settings
 
     # Controls the addition of comments to the beginning of executed SQL
     # statements to be used by the New Relic Query Performance Monitoring
-    # product for entity linking. Default is false.
+    # product for entity linking. if enabled is true, the NR service GUID
+    # will be prepended to the executed SQL. For example:
+    # /*nr_service_guid=MTE3NDc2MDB8QVBNfEFQUExJQ0FUSU9OfDI4MTc5NDEIEA*/SELECT * FROM USER;
     #
-    # A resulting comment would resemble this:
-    # /*nr_service_guid=MTE3NDc2MDB8QVBNfAAAAAxJQEEEEE9OfDI4MTc5NDEIEA*/
+    # Default is false.
     sql_metadata_comments:
+      enabled: false
 
     # For large SQL statements, executing the regular expressions that attempt to parse exec and
     # call statements can take a significant amount of time. Setting this to true will disable the
@@ -447,6 +449,12 @@ common: &default_settings
 
     # This instrumentation reports metrics for resultset operations.
     com.newrelic.instrumentation.jdbc-resultset:
+      enabled: false
+
+    # This instrumentation emits per-cluster Kafka metrics (MessageBroker/Kafka/Cluster/{id}/...).
+    # The cluster ID is read from metadata the client already fetches as part of normal
+    # operation (no AdminClient, no extra network call), so opting in has no added cost.
+    kafka-clients-cluster-metrics:
       enabled: false
 
     # Classes loaded by classloaders in this list will not be instrumented.
